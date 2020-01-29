@@ -1,27 +1,53 @@
-# ParallelTest
+# Repro for angular issue #35000
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.0-rc.11.
+Added a simple console.log to lockfile guarded function
 
-## Development server
+Steps to reproduce :
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- npm install
+- npm run build
 
-## Code scaffolding
+```
+Locked [Function (anonymous)]
+Compiling @angular/animations : fesm5 as esm5
+Compiling @angular/animations : esm2015 as esm2015
+Compiling @angular/animations : esm5 as esm5
+Compiling @angular/animations : main as umd
+Compiling @angular/animations : fesm2015 as esm2015
+Compiling @angular/compiler/testing : fesm2015 as esm2015
+Compiling @angular/compiler/testing : fesm5 
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```
+ npm run build                                                                                                                                                          1.4m  Thu Jan 30 00:27:58 2020
 
-## Build
+> parallel-test@0.0.0 build /Users/jmbarbier/devel/sandbox/parallel-test
+> npm-run-all --parallel build:*
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Running unit tests
+> parallel-test@0.0.0 build:app1 /Users/jmbarbier/devel/sandbox/parallel-test
+> ng build --prod app1
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+> parallel-test@0.0.0 build:app4 /Users/jmbarbier/devel/sandbox/parallel-test
+> ng build --prod app4
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Further help
+> parallel-test@0.0.0 build:app2 /Users/jmbarbier/devel/sandbox/parallel-test
+> ng build --prod app2
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+> parallel-test@0.0.0 build:app3 /Users/jmbarbier/devel/sandbox/parallel-test
+> ng build --prod app3
+
+
+> parallel-test@0.0.0 build:app5 /Users/jmbarbier/devel/sandbox/parallel-test
+> ng build --prod app5
+
+0% compilingLocked [Function (anonymous)]
+Locked [Function (anonymous)]
+0% compilingLocked [Function (anonymous)]
+40% building 15/16 modules 1 active ...-
+```
+
+shows that something uses a lockfile event with ngcc precompilation => parallel build failure

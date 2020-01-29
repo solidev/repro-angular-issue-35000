@@ -4,10 +4,16 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm-run-all --parallel build:*",
+    "build:app1": "node_modules/.bin/ng build --prod app1",
+    "build:app2": "node_modules/.bin/ng build --prod app2",
+    "build:app3": "node_modules/.bin/ng build --prod app3",
+    "build:app4": "node_modules/.bin/ng build --prod app4",
+    "build:app5": "node_modules/.bin/ng build --prod app5",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "cp lock.js node_modules/@angular/compiler-cli/ngcc/src/execution/lock_file.js && ngcc --create-ivy-entry-points"
   },
   "private": true,
   "dependencies": {
@@ -28,9 +34,10 @@
     "@angular/cli": "~9.0.0-rc.11",
     "@angular/compiler-cli": "~9.0.0-rc.11",
     "@angular/language-service": "~9.0.0-rc.11",
-    "@types/node": "^12.11.1",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^12.11.1",
+    "apply-loader": "^2.0.0",
     "codelyzer": "^5.1.2",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -39,6 +46,7 @@
     "karma-coverage-istanbul-reporter": "~2.1.0",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.2",
+    "npm-run-all": "^4.1.5",
     "protractor": "~5.4.3",
     "ts-node": "~8.3.0",
     "tslint": "~5.18.0",
